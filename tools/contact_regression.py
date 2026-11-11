@@ -26,9 +26,11 @@ def contact_records(record):
     return list({(str(Path(e['file']).resolve()),e['finger']):dict(file=str(Path(e['file']).resolve()),finger=e['finger']) for e in items}.values())
 
 
-def check(package,baseline,candidate):
+def check(package,baseline,candidate,additional_records=()):
     old=json.loads(baseline.read_text(encoding='utf8'))
-    items=contact_records(old)
+    left=old.get('input_hand')=='left'
+    items=contact_records(old)+list(additional_records)
+    retained=[]
     report=dict(records=[],issues=[],accepted=True)
     if not items:return report
     g=NativeHand(package)
@@ -37,6 +39,13 @@ def check(package,baseline,candidate):
         if not path.is_file():
             report['issues'].append('缺少原对指回放 '+str(path));continue
         rows=[json.loads(s) for s in path.read_text(encoding='utf8').splitlines()]
+        if left and rows and rows[0].get('source_hand')!=1:
+            # The initial mirrored profile inherited the right wearer's history.
+            # Only left-glove observations can validate a left wearer refit.
+            continue
+        if left and not all(r.get('source_hand')==1 and r.get('hand')==2 and r.get('pose_space')=='mirrored_right' for r in rows):
+            raise ValueError('左手对指回放坐标不一致：'+str(path))
+        retained.append(item)
         stamps=np.array([r['timestamp_ns'] for r in rows],dtype=np.int64)
         if len(stamps)>1 and np.median(np.diff(stamps))>1e9/30:
             from tools.refine_middle_feedback import dense
@@ -47,7 +56,11 @@ def check(package,baseline,candidate):
         gap_limit=before['hold_pad_mm']+1
         if old.get('contact_goal_mm') is not None:
             gap_limit=min(gap_limit,max(float(old['contact_goal_mm'])+.2,before['hold_pad_mm']))
-        if after['hold_pad_mm']>gap_limit:
+        if left and after['source_tip_mm']>3:
+            desired=after['source_tip_mm']
+            gap_worse=abs(after['hold_pad_mm']-desired)>abs(before['hold_pad_mm']-desired)+1.
+        else:gap_worse=after['hold_pad_mm']>gap_limit
+        if gap_worse:
             reasons.append(f"间距 {before['hold_pad_mm']:.1f}→{after['hold_pad_mm']:.1f} mm")
         if after['mean_shape_deg']>before['mean_shape_deg']+.7:
             reasons.append(f"手形误差增加 {after['mean_shape_deg']-before['mean_shape_deg']:.2f}°")
@@ -59,8 +72,8 @@ def check(package,baseline,candidate):
             report['issues'].append(name+'（'+source+'）：'+'，'.join(reasons))
     report['accepted']=not report['issues']
     write(candidate.parent/'retained_contact_validation.json',report)
-    if not report['accepted']:raise ValueError('新补录未应用，保留当前标定：'+'；'.join(report['issues']))
+    if not report['accepted']:raise ValueError('历史对指回放：'+'；'.join(report['issues']))
     record=json.loads(candidate.read_text(encoding='utf8'))
-    record['retained_contact_records']=items
+    record['retained_contact_records']=retained
     write(candidate,record)
     return report

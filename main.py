@@ -43,8 +43,11 @@ def check(profile, render=False):
 
 def main():
     parser = argparse.ArgumentParser(description='F1 URDF-A simulation / G7 official UDP follow')
-    parser.add_argument('--profile', type=Path, default=ROOT / 'calibration/local/profile.json',
-                        help='Local URDF-A wearer profile; never uploaded by default')
+    parser.add_argument('--profile', type=Path,
+                        help='Local URDF-A wearer profile; never uploaded by default. Defaults to '
+                             'calibration/local/profile.json (right) or profile_left.json (left)')
+    parser.add_argument('--hand', choices=['right', 'left'], default='right',
+                        help='Glove hand; a left glove is mirrored onto the right F1 model')
     parser.add_argument('--port', type=int, default=15001, help='HumanHand UDP port on localhost')
     parser.add_argument('--demo', action='store_true', help='Offline model demonstration; no glove/profile needed')
     parser.add_argument('--seconds', type=float, help='Close the offline demo after this duration')
@@ -55,6 +58,8 @@ def main():
         parser.error('--render requires --check')
     if not 1 <= args.port <= 65535:
         parser.error('--port must be between 1 and 65535')
+    if args.profile is None:
+        args.profile = ROOT / 'calibration/local' / ('profile_left.json' if args.hand == 'left' else 'profile.json')
     (ROOT / 'results').mkdir(exist_ok=True)
     if args.check:
         print(json.dumps(check(args.profile, args.render), ensure_ascii=False, indent=2))
@@ -63,11 +68,10 @@ def main():
         launch(args.seconds)
     else:
         if not args.profile.is_file():
-            parser.error('Missing local profile. Copy the existing URDF-A profile to '
-                         'calibration/local/profile.json, or use --profile PATH. '
-                         'Use --demo to inspect the model without a glove.')
+            parser.error(f'Missing local profile {args.profile}. Copy the existing URDF-A profile there, '
+                         'or use --profile PATH. Use --demo to inspect the model without a glove.')
         from urdf_a_live import launch
-        launch(args.profile, args.port)
+        launch(args.profile, args.port, input_hand=args.hand)
 
 
 if __name__ == '__main__':

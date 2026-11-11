@@ -18,6 +18,38 @@ from g7_official_udp import official_config
 from g7_teleop import load_g7_config, BASE
 
 
+def left_supplement_settings(original):
+    settings={k:original[k] for k in ('input_hand','source_geometry','angle_reference','mirror_base_sha256',
+        'pinch_angle_updates','pinch_round','retained_contact_records','official_pose_updates','official_reference_session','segment_alignment') if k in original}
+    if 'angle_derived_spacing' in original:
+        settings['angle_derived_spacing']=dict(original['angle_derived_spacing'],preserve_open_gap=True)
+    return settings
+
+
+def update_left_natural_fit(record,previous):
+    """Limit how far one additional natural-motion take moves the existing fit."""
+    prior_manifest=Path(previous['supplement']) if previous.get('supplement') else None
+    if not prior_manifest or not prior_manifest.is_file() or json.loads(prior_manifest.read_bytes()).get('input_hand')!='left':
+        return record
+    fraction=.15
+    for finger,block in record['blocks'].items():
+        old=previous['blocks'][finger]
+        offset=np.asarray(block['zero'])-old['zero']
+        matrix=np.asarray(old['matrix'])
+        block['bias']=(1-fraction)*(old['bias']+matrix@offset)+fraction*np.asarray(block['bias'])
+        block['matrix']=(1-fraction)*matrix+fraction*np.asarray(block['matrix'])
+        # Combine Gaussian residuals in the new zero's coordinates. Sum
+        # coefficients at repeated sample centers so they are evaluated once.
+        a=previous['angular_corrections'][finger];b=record['angular_corrections'][finger]
+        if not np.isclose(a['width'],b['width']):raise ValueError('两轮关节修正的角度带宽不一致')
+        centers=np.vstack((np.asarray(a['centers'])-offset,b['centers']))
+        values=np.vstack(((1-fraction)*np.asarray(a['coefficients']),fraction*np.asarray(b['coefficients'])))
+        unique,index=np.unique(centers,axis=0,return_inverse=True)
+        coef=np.zeros((len(unique),values.shape[1]));np.add.at(coef,index,values)
+        b.update(centers=unique,coefficients=coef)
+    return record
+
+
 def fit(package,folder,supplement=None):
     manifest=folder/'manifest.json'
     check_split(manifest)
@@ -29,6 +61,12 @@ def fit(package,folder,supplement=None):
         groups += [(dict(e,supplemental=True),frames) for e,frames in load_groups(supplement,'train')]
     stage_frames={e['stage']:frames[0] for e,frames in groups}
     neutral=stage_frames['open']
+    migrated={}
+    if supplement and json.loads(supplement.read_bytes()).get('input_hand')=='left':
+        original=json.loads((supplement.parent/'baseline_profile.json').read_bytes())
+        if original.get('input_hand')!='left':raise ValueError('左手补录缺少独立镜像基准')
+        neutral=original['neutral']
+        migrated=left_supplement_settings(original)
     source=SourceHand(neutral)
     g=NativeHand(package);fk=verify_fk(package,g)
     old=HandGeometry('simulation_straight')
@@ -111,10 +149,11 @@ def fit(package,folder,supplement=None):
         blocks['middle']=baseline['blocks']['middle']
         corrections['middle']=baseline['angular_corrections']['middle']
         widths=baseline['middle_widths']
-    return dict(middle_unavailable='middle' in missing,kind='urdf_a_natural_v2',geometry_id=g.geometry_id,urdf_sha256=g.sha,neutral=neutral,
+    record=dict(**migrated,middle_unavailable='middle' in missing,kind='urdf_a_natural_v2',geometry_id=g.geometry_id,urdf_sha256=g.sha,neutral=neutral,
                 blocks=blocks,angular_corrections=corrections,middle_widths=widths,wrist_to_model=wrist_to_model,
                 supplement=str(supplement.resolve()) if supplement is not None else None,
                 training_manifest=str(manifest.resolve()),training_stages=list(stage_frames),fk_crosscheck=fk)
+    return update_left_natural_fit(record,original) if migrated else record
 
 
 if __name__=='__main__':

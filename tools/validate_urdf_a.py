@@ -38,6 +38,9 @@ def interpolate(a,b,n,only_middle=False):
 
 
 def run(package,folder,profile=None,supplement=None):
+    if supplement and json.loads(supplement.read_bytes()).get('input_hand')=='left':
+        from tools.validate_left_natural import run as validate_left
+        return validate_left(package,profile,supplement)
     g=NativeHand(package);profile=profile or folder/'profile_urdf_a_natural.json'
     poses={}
     for f in ('open','fist',*FINGERS[1:]):
@@ -172,7 +175,7 @@ def run(package,folder,profile=None,supplement=None):
                 comparison[label]=dict(stats(rows),mean_direction_deg=float(np.mean(errors)))
             report['supplement_validation'][entry['stage']]=comparison
             if comparison['refitted']['mean_direction_deg']>comparison['previous']['mean_direction_deg']+2.:
-                raise ValueError('独立补录动作的手形方向误差增加超过 2°，保留当前档案')
+                raise ValueError('独立补录动作的手形方向误差增加超过 2°')
     return report
 
 

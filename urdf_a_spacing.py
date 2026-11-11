@@ -8,8 +8,9 @@ from hand_kinematics import FINGERS
 def spacing_goal(g, nominal, chains, settings):
     """Refine a nominal joint pose, without a nearest-finger or pinch state.
 
-    Only excess separation is penalized. A smaller nominal gap may already be
-    correct (the glove reports bone tips; the robot uses surface landmarks).
+    Near touch, a smaller nominal gap may already be correct (the glove
+    reports bone tips; the robot uses surface landmarks). Profiles calibrated
+    for open gaps also correct fingers that pass too close to each other.
     All four pairs participate continuously. Retain the measured nonzero
     separation and solve in the 17 native semantic axes, not the 37 hinges.
     """
@@ -28,9 +29,16 @@ def spacing_goal(g, nominal, chains, settings):
         g.assign(q)
         pads=np.array([g.pad_pose(f)[0] for f in FINGERS])
         vectors=pads[1:]-pads[0]; lengths=np.linalg.norm(vectors,axis=1)
-        excess=np.maximum(lengths-target,0.)
         if influence is None:
+            difference=lengths-target
+            excess=np.maximum(difference,0.)
             influence=weight*excess**2/(excess**2+1.)
+            if settings.get('preserve_open_gap'):
+                # The thumb is shared. As it approaches any finger, taper
+                # opening corrections so another digit cannot pull it away.
+                t=np.clip((src.min()-16.)/10.,0.,1.)
+                shortfall=np.maximum(-difference,0.)
+                influence+=weight*t*t*(3.-2.*t)*shortfall**2/(shortfall**2+1.)
             if not np.any(influence):break
         jacs=[]
         for f,pt in zip(FINGERS,pads):

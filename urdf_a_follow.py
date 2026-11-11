@@ -108,12 +108,20 @@ class Follower:
                           for f,b in record.get('angular_corrections',{}).items()}
         self.local_corrections={f:(np.asarray(b['centers']),np.asarray(b['coefficients']),float(b['width']))
                                 for f,b in record.get('local_angular_corrections',{}).items()}
+        self.pinch_corrections={f:(np.asarray(b['centers']),np.asarray(b['coefficients']),float(b['width']))
+                                for f,b in record.get('pinch_angle_updates',{}).items()}
         context=record.get('joint_angle_context')
+        self.official_corrections={f:(np.asarray(b['centers']),np.asarray(b['coefficients']),float(b['width']))
+                                   for f,b in record.get('official_pose_updates',{}).items()}
         self.angle_context=None if context is None or self.middle_unavailable else (
             np.asarray(context['centers']),np.asarray(context['coefficients']),
             np.asarray(context['scale']),float(context['width']),float(context['max_delta']))
         self.widths=np.asarray(record['middle_widths'])
         self.spacing=record.get('angle_derived_spacing') if not self.middle_unavailable else None
+        self.segment_alignment=None
+        if record.get('segment_alignment') and not self.middle_unavailable:
+            from urdf_a_segments import SegmentAlignment
+            self.segment_alignment=SegmentAlignment(model,record['segment_alignment'])
         self.display_rotation=np.asarray(record['wrist_to_model'])
         self.sweep=Sweep(model,self.middle_unavailable)
         self.u=np.zeros(17)
@@ -132,7 +140,7 @@ class Follower:
 
     def raw_angles(self,features):
         raw=np.concatenate([b+W@(features[f]-z) for f,(z,b,W) in self.blocks.items()])
-        for blocks in (self.corrections,self.local_corrections):
+        for blocks in (self.corrections,self.local_corrections,self.pinch_corrections,self.official_corrections):
             for f,parameters in blocks.items():
                 raw[self.g.cols[f]]+=angular_adjustment(features[f]-self.blocks[f][0],*parameters)
         if self.angle_context is not None:
@@ -157,10 +165,12 @@ class Follower:
         base[9:11]=np.where(x>hi-wh,hi-np.maximum(0,hi+wh-x)**2/(4*wh),low)
         # Optional calibrated context uses joint angles only: no live endpoint
         # distances, contact classification, hysteresis or snap-to-pose state.
-        if self.spacing:
+        if self.spacing or self.segment_alignment:
             from urdf_a_spacing import spacing_goal
             try:
-                base=spacing_goal(self.g,base,chains,self.spacing)
+                if self.segment_alignment:
+                    base=self.segment_alignment.solve(base,chains,self.display_rotation)
+                if self.spacing:base=spacing_goal(self.g,base,chains,self.spacing)
             finally:
                 self.g.assign(self.u)
         self.goal=base

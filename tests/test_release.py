@@ -116,6 +116,26 @@ def test_udp_forearm_packet_becomes_wrist_relative():
     np.testing.assert_allclose(frame['quaternions_wxyz'], np.tile([1, 0, 0, 0], (21, 1)), atol=1e-7)
 
 
+def test_left_glove_mirrors_onto_right_model():
+    from g7_left_mirror import canonical_right
+    from g7_joint_mapping import rotations
+
+    receiver = OfficialUDPReceiver(reader.decode_udp, 'left')
+    rng = np.random.default_rng(1111)
+    positions = rng.uniform(-.05, .05, size=(21, 3))
+    quats = Rotation.random(21, random_state=7).as_quat()[:, [3, 0, 1, 2]]
+    header = reader.HEADER.pack(0x464E4853, 4, 1, 21, 1, 1, 100, 0x77787A79)
+    frame = receiver.accept(header + b''.join(reader.JOINT.pack(*p, *q) for p, q in zip(positions, quats)))
+    assert frame is not None and frame['hand'] == 1
+    right = canonical_right(frame)
+    assert (right['hand'], right['source_hand'], right['pose_space']) == (2, 1, 'mirrored_right')
+    S = np.diag([1, -1, 1])
+    np.testing.assert_allclose(right['positions_m'], np.asarray(frame['positions_m']) @ S, atol=1e-12)
+    np.testing.assert_allclose(rotations(right).as_matrix(), S @ rotations(frame).as_matrix() @ S, atol=1e-10)
+    with pytest.raises(ValueError):
+        canonical_right(right)
+
+
 def test_malformed_udp_is_rejected():
     receiver = OfficialUDPReceiver(reader.decode_udp, 'right')
     assert receiver.accept(packet()[:-1]) is None

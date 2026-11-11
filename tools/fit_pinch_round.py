@@ -41,12 +41,27 @@ def read_take(folder,entry):
     return [json.loads(s) for s in (folder/entry['file']).read_text(encoding='utf8').splitlines()]
 
 
+def validate_mirrored_take(rows):
+    if not rows or not all(r.get('source_hand')==1 and r.get('hand')==2 and r.get('pose_space')=='mirrored_right' for r in rows):
+        raise ValueError('左手对指记录缺少镜像关节位姿')
+
+
+def spacing_error(result):
+    source=result['source_tip_mm']
+    if source<=3.:
+        return max(0.,result['hold_pad_mm']-3.)
+    return abs(result['hold_pad_mm']-source)
+
+
 def fit_holds(g,old,record,folder,manifest):
     by_digit={f:[] for f in FINGERS}
+    mirrored=record.get('input_hand')=='left'
     for entry in manifest['train']:
         f=entry['stage']
         rows=read_take(folder,entry);check_take(rows,f,'train',manifest.get('unavailable_fingers',()))
+        if mirrored:validate_mirrored_take(rows)
         frame=open_reference(rows)
+        pad_target=max(2.5,float(np.median(take_gaps(rows,f)))) if mirrored else 1.1
         base=old.command(frame).copy()
         feat,chains=old.source.read(frame)
         directions={}
@@ -59,7 +74,7 @@ def fit_holds(g,old,record,folder,manifest):
         def objective(x):
             g.assign(pose(x));a,n=g.pad_pose('thumb');b,m=g.pad_pose(f)
             shape=sum(np.sum((g.bone_directions(d)-target)**2) for d,target in directions.items())
-            return np.sum((a-b+1.1*n)**2)+16*np.sum((n+m)**2)+100*shape+np.sum((np.r_[[6.]*5,[9.]*3]*(x-base[ids]))**2)
+            return np.sum((a-b+pad_target*n)**2)+16*np.sum((n+m)**2)+100*shape+np.sum((np.r_[[6.]*5,[9.]*3]*(x-base[ids]))**2)
         def clearance(x):
             g.assign(pose(x));return g.clearance()-1.05
         budget=np.radians(24.)
@@ -70,25 +85,29 @@ def fit_holds(g,old,record,folder,manifest):
             raise ValueError('本轮标定姿态未通过 A 版间隙检查 '+f)
         for digit in ('thumb',f):
             z,b,W=old.blocks[digit];x=feat[digit]-z
-            previous=old.raw_angles(feat)[g.cols[digit]]
+            previous=(base if mirrored else old.raw_angles(feat))[g.cols[digit]]
             desired=pose(result.x)[g.cols[digit]]
             by_digit[digit].append((x,np.clip(desired-previous,-budget,budget)))
     # Add smooth digit-local angular residuals to the live profile. No
     # runtime state or cross-finger distance is used to activate a correction.
     for f,samples in by_digit.items():
         if not samples:continue
-        block=record['angular_corrections'][f]
+        if mirrored:
+            block=record.setdefault('pinch_angle_updates',{}).setdefault(f,dict(
+                centers=[],coefficients=[],width=float(np.radians(14))))
+        else:
+            block=record['angular_corrections'][f]
         centers=np.array([x for x,_ in samples]);targets=np.array([v for _,v in samples])
         width=block['width']
         def kernel(x):
             return np.exp(-.5*np.sum(((x[:,None]-centers[None,:])/width)**2,axis=2))
         K=kernel(centers)
-        previous=kernel(np.array(block['centers']))
+        previous=kernel(np.asarray(block['centers']).reshape(-1,centers.shape[1]))
         protection=previous*(1-previous.max(axis=1))[:,None]
         system=K.T@K+protection.T@protection/max(1,len(previous))+.025*np.eye(len(K))
         coef=np.linalg.solve(system,K.T@targets)
-        block['centers']=np.vstack((block['centers'],centers)).tolist()
-        block['coefficients']=np.vstack((block['coefficients'],coef)).tolist()
+        block['centers']=np.vstack((np.asarray(block['centers']).reshape(-1,centers.shape[1]),centers)).tolist()
+        block['coefficients']=np.vstack((np.asarray(block['coefficients']).reshape(-1,coef.shape[1]),coef)).tolist()
     record['pinch_round']=str((folder/'manifest.json').resolve())
 
 
@@ -124,10 +143,13 @@ def replay(g,path,rows,f=None,middle_unavailable=None):
     return result
 
 
-def fit_and_validate(folder):
+def fit_round(folder):
     manifest=json.loads((folder/'manifest.json').read_text(encoding='utf8'))
     base_path=folder/'baseline_profile.json'
     record=json.loads(base_path.read_text(encoding='utf8'))
+    mirrored=record.get('input_hand')=='left'
+    if mirrored!=(manifest.get('input_hand')=='left'):
+        raise ValueError('对指档案与本轮手别不一致')
     expected=[f for f in FINGERS[1:] if not (f=='middle' and record.get('middle_unavailable'))]
     for split in ('train','validation'):
         if [e['stage'] for e in manifest[split]]!=expected:
@@ -135,21 +157,48 @@ def fit_and_validate(folder):
     g=NativeHand(ROOT/'assets/urdf_a')
     fit_holds(g,Follower(g,base_path),record,folder,manifest)
     candidate=folder/'profile.json';write(candidate,record)
+
+
+def validate_round(folder):
+    manifest=json.loads((folder/'manifest.json').read_bytes())
+    base_path=folder/'baseline_profile.json'
+    candidate=folder/'profile.json'
+    record=json.loads(candidate.read_bytes())
+    mirrored=record.get('input_hand')=='left'
+    g=NativeHand(ROOT/'assets/urdf_a')
     report=dict(validation={},previous_natural={},accepted=False);issues=[]
     for entry in manifest['validation']:
         f=entry['stage'];rows=read_take(folder,entry);check_take(rows,f,'validation',manifest.get('unavailable_fingers',()))
+        if mirrored:validate_mirrored_take(rows)
         a,b=[replay(g,path,rows,f) for path in (base_path,candidate)]
         report['validation'][f]=dict(previous=a,refitted=b)
-        if (b['hold_pad_mm']>a['hold_pad_mm']+1.5 or b['released_pad_mm']<b['hold_pad_mm']+8
+        gap_worse=(spacing_error(b)>spacing_error(a)+.5 if mirrored else b['hold_pad_mm']>a['hold_pad_mm']+1.5)
+        if (gap_worse or b['released_pad_mm']<b['hold_pad_mm']+8 or b['blocked_frames']>a['blocked_frames']
                 or b['mean_shape_deg']>a['mean_shape_deg']+2.):
             issues.append(f+' 对指间隙、松开或手形回归')
     gain=np.mean([v['previous']['hold_pad_mm']-v['refitted']['hold_pad_mm'] for v in report['validation'].values()])
-    if gain<.3:issues.append('本轮平均指腹距离未改善')
+    if mirrored:
+        errors=[spacing_error(v['refitted']) for v in report['validation'].values()]
+        old_errors=[spacing_error(v['previous']) for v in report['validation'].values()]
+        report['mean_spacing_error_mm']=dict(previous=np.mean(old_errors),refitted=np.mean(errors))
+        if np.mean(errors)>.5 and np.mean(errors)>=np.mean(old_errors):
+            issues.append('本轮对指与手套留缝的匹配误差未改善')
+    elif gain<.3:issues.append('本轮平均指腹距离未改善')
     earlier=Path(record['supplement']) if record.get('supplement') else None
     if earlier and earlier.is_file():
         previous_manifest=json.loads(earlier.read_text(encoding='utf8'))
         missing_middle='middle' in previous_manifest.get('unavailable_fingers',[])
         for e in previous_manifest['validation']:
+            if mirrored and previous_manifest.get('input_hand')=='left':
+                from tools.validate_left_natural import replay as replay_spacing
+                rows=read_take(earlier.parent,e)
+                validate_mirrored_take(rows)
+                a,b=[replay_spacing(g,p,rows[::3],previous_manifest.get('unavailable_fingers',[])) for p in (base_path,candidate)]
+                report['previous_natural'][e['stage']]=dict(previous=a,refitted=b)
+                for key,tolerance in [('mean_direction_deg',2.),('blocked_frames',0),('false_closures',0),('near_error_mm',1.),('contact_pad_mm',1.)]:
+                    if b[key] is not None and b[key]>a[key]+tolerance:
+                        issues.append(f"已有左手动作 {e['stage']} 的 {key} 退步")
+                continue
             rows=read_take(earlier.parent,e);a,b=[replay(g,path,rows,middle_unavailable=missing_middle) for path in (base_path,candidate)]
             report['previous_natural'][e['stage']]=dict(previous=a,refitted=b)
             if b['mean_shape_deg']>a['mean_shape_deg']+2.:issues.append('已有自然动作误差增加超过 2°')
@@ -159,3 +208,6 @@ def fit_and_validate(folder):
     return record
 
 
+def fit_and_validate(folder):
+    fit_round(folder)
+    return validate_round(folder)

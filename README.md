@@ -29,6 +29,17 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py --profile "D:\profiles\profile.json"
 ```
 
+### 左手手套镜像
+
+左手手套可驱动同一只 F1 右手模型：HumanHand 开启左手“相对手腕 21 点关节位姿”UDP，收到的左手位姿按 `S = diag(1, -1, 1)` 镜像成等效右手位姿后进入同一条映射链路。左手使用独立的个人档案（档案内 `input_hand` 为 `left`），默认读取 `calibration/local/profile_left.json`，手别与档案不符时拒绝启动。
+
+```powershell
+.\.venv\Scripts\python.exe main.py --hand left
+.\.venv\Scripts\python.exe main.py --hand left --check
+```
+
+左手窗口提供“用官方手模标定（八个动作）”入口：依次采集张开、握拳、重复握拳、拇指活动及拇指分别贴四指，按 HumanHand 解算出的骨段方向和指尖间距在原限位内修正档案，再用已有的“留缝擦过 / 轻碰再松开”记录回放对比。窗口底部实时显示各指“手套指尖 / F1 指腹”到拇指的距离（mm）。
+
 一个端口同时只运行一个接收实例。拖动模型旋转视角，滚轮缩放；数据中断超过配置阈值后保持当前姿态，不自动回零。`results/urdf_a_live_status.json` 提供输入序号、目标/实际角度、档案哈希、间隙及避让状态。
 
 在 PyCharm 中打开本目录，选择项目虚拟环境并安装依赖，运行 `main.py`。随包提供 `F1 URDF-A` 运行配置；离线查看时添加参数 `--demo`。

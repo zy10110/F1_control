@@ -26,14 +26,15 @@ TAKES=[
 
 
 class CaptureGuide:
-    def __init__(self, app, pinch=False):
+    def __init__(self, app, pinch=False,official=False):
         self.pinch=pinch
+        self.official=official
         self.app=app;self.window=tk.Toplevel(app.root)
         self.window.title('A 版自然手形 · 补录标定')
         self.window.geometry('720x310+45+55')
         self.window.attributes('-topmost',True)
         self.index=0;self.start=None;self.end=None;self.rows=[];self.issue=None
-        self.lock=threading.Lock();self.job=None;self.alive=True;self.result=None
+        self.lock=threading.Lock();self.job=None;self.alive=True;self.validation_notes=[]
         self.folder=app.resume or ROOT/'calibration'/('natural_supplement_'+datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
         self.manifest=dict(train=[],validation=[],base_session=str(app.profile.parent),completed=False)
         self.takes=list(TAKES)
@@ -56,7 +57,13 @@ class CaptureGuide:
             self.takes += [('validation',f,'拇指与'+name+' · 重做验证',8,
                 f'先自然张开。采集开始后，用约两秒靠近{name}，指尖轻贴并停住约三秒，再慢慢完全松开。') for f,name in fingers]
             self.manifest['method']='official_pinch_holds'
-        if app.resume is not None:
+        if official:
+            from tools.official_pose_calibration import TAKES as official_takes
+            self.takes=list(official_takes)
+            self.folder=ROOT/'calibration'/('official_pose_'+datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
+            self.window.title('用官方手模标定 F1')
+            self.manifest['method']='solved_official_poses'
+        if app.resume is not None and not official:
             self.manifest=json.loads((self.folder/'manifest.json').read_text(encoding='utf8'))
             wanted={t[1] for t in self.takes}
             for split in ('train','validation'):
@@ -64,6 +71,9 @@ class CaptureGuide:
             app.resume=None
         self.manifest['unavailable_fingers']=['middle'] if app.follower.middle_unavailable else []
         self.manifest['base_session']=str(app.profile.parent)
+        if self.manifest.get('input_hand','right')!=app.input_hand and self.manifest.get('train'):
+            raise ValueError('补录手别与当前手套不一致')
+        self.manifest['input_hand']=app.input_hand
         completed={e['stage'] for split in ('train','validation') for e in self.manifest[split]}
         self.index=next((i for i,t in enumerate(self.takes) if not any(e['stage']==t[1] for e in self.manifest[t[0]])),len(self.takes))
         write(self.folder/'manifest.json',self.manifest)
@@ -84,7 +94,7 @@ class CaptureGuide:
         self.window.lift();self.window.focus_force();self.poll()
 
     def close(self):
-        if self.job is not None and self.job.is_alive():
+        if self.job is not None:
             self.status.set('正在验证，请等待本轮结束。');return
         self.alive=False;self.app.guide=None;self.window.destroy()
 
@@ -95,16 +105,17 @@ class CaptureGuide:
             paths=list(Path('E:/HumanHand/assets/factory/calib_guide').glob('pinch_thumb_'+key+'.*'))
             if paths:
                 with Image.open(paths[0]) as image:
+                    if self.app.input_hand=='left':image=image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
                     image.thumbnail((350,190));self.picture=ImageTk.PhotoImage(image.copy())
                 self.diagram.config(image=self.picture)
-        self.heading.set(f'{self.index+1}/{len(self.takes)}　{name}');self.instruction.set(instruction)
+        self.heading.set(f'{self.index+1}/{len(self.takes)}　{name}');self.instruction.set(instruction.replace('右手',self.app.hand_name))
         self.status.set(f'准备好后按回车，倒数 3 秒后开始，采 {duration} 秒。')
         self.button.config(state='normal')
 
     def begin(self):
         if self.index>=len(self.takes) or self.start is not None:return
         if not self.app.latest or time.monotonic()-self.app.latest[0]>.5:
-            self.status.set('等待 HumanHand 向 127.0.0.1:15001 发送右手 IK 数据。收到数据后再按回车。');return
+            self.status.set(f'等待 HumanHand 向 127.0.0.1:{self.app.port} 发送{self.app.hand_name} IK 数据。收到数据后再按回车。');return
         with self.lock:
             self.rows=[];self.start=time.monotonic()+3.;self.end=self.start+self.takes[self.index][3]
         self.button.config(state='disabled')
@@ -115,10 +126,27 @@ class CaptureGuide:
 
     def save(self,rows):
         split,key,name,duration,_=self.takes[self.index]
+        hold=key=='rest_again' or (self.pinch and split=='train')
         stamps=np.array([r['timestamp_ns'] for r in rows],dtype=float)*1e-9
         if len(rows)<duration*15 or stamps[-1]-stamps[0]<duration*.8 or np.any(np.diff(stamps)<=0) or np.diff(stamps).max()>.4:
             raise ValueError('有效帧不足或数据中断。请检查官方发送，再重做本项。')
-        if self.pinch:
+        if self.official:
+            from tools.official_pose_calibration import MOVING
+            hold=key not in MOVING
+            if key in ('index','middle','ring','pinky'):
+                from tools.fit_pinch_round import check_take
+                check_take(rows,key,split)
+            elif key not in MOVING:open_reference(rows)
+            else:
+                from g7_joint_mapping import joint_rotations
+                digits=('thumb',) if key=='thumb_motion' else ('index','middle','ring','pinky')
+                start=joint_rotations(rows[0])
+                movement=[]
+                for row in rows[::6]:
+                    now=joint_rotations(row)
+                    movement.append(max((a.inv()*b).magnitude() for f in digits for a,b in zip(start[f],now[f])))
+                if np.percentile(movement,90)<np.radians(8):raise ValueError('该段关节活动太小，请在开始采集后做动作。')
+        elif self.pinch:
             from tools.fit_pinch_round import check_take
             check_take(rows,key,split,self.manifest['unavailable_fingers'])
         elif key=='rest_again':open_reference(rows)
@@ -130,30 +158,64 @@ class CaptureGuide:
                 raise ValueError('本段只有静止手形。倒计时结束后开始动作，再做一次。')
         filename=f'{split}_{key}.jsonl'
         (self.folder/filename).write_text(''.join(json.dumps(row)+'\n' for row in rows),encoding='utf8')
-        self.manifest[split].append(dict(file=filename,stage=key,kind='hold' if key=='rest_again' or (self.pinch and split=='train') else 'motion',samples=24))
+        self.manifest[split].append(dict(file=filename,stage=key,kind='hold' if hold else 'motion',samples=16 if self.official else 24))
         write(self.folder/'manifest.json',self.manifest)
 
     def calibrate(self):
+        package=ROOT/'assets/urdf_a'
+        manifest=self.folder/'manifest.json'
+        candidate=self.folder/'profile.json'
         try:
-            if self.pinch:
-                from tools.fit_pinch_round import fit_and_validate
-                self.result=fit_and_validate(self.folder)
+            if self.official or self.pinch:
+                if self.official:
+                    from tools.official_pose_calibration import fit_round, validate_round
+                else:
+                    from tools.fit_pinch_round import fit_round, validate_round
+                fit_round(self.folder)
+            else:
+                from tools.fit_urdf_a import fit
+                write(candidate,fit(package,self.app.profile.parent,manifest))
+        except Exception as exc:
+            self.issue=f'拟合失败：{exc}'
+            return
+
+        try:
+            if self.official or self.pinch:
+                validate_round(self.folder)
+            else:
+                from tools.validate_urdf_a import run
+                report=run(package,self.app.profile.parent,profile=candidate,supplement=manifest)
+                write(self.folder/'validation.json',report)
+        except Exception as exc:
+            self.validation_notes.append(str(exc))
+        if not self.official:
+            try:
                 from tools.contact_regression import check
-                temp=self.folder/'profile.json'
-                check(ROOT/'assets/urdf_a',self.folder/'baseline_profile.json',temp)
-                self.result=json.loads(temp.read_text(encoding='utf8'))
-                return
-            from tools.fit_urdf_a import fit
-            from tools.validate_urdf_a import run
-            package=ROOT/'assets/urdf_a';base=self.app.profile.parent
-            record=fit(package,base,self.folder/'manifest.json')
-            temp=self.folder/'profile.json';write(temp,record)
-            report=run(package,base,profile=temp,supplement=self.folder/'manifest.json')
-            write(self.folder/'validation.json',report)
-            from tools.contact_regression import check
-            check(package,self.folder/'baseline_profile.json',temp)
-            self.result=json.loads(temp.read_text(encoding='utf8'))
-        except Exception as exc:self.issue=str(exc)
+                check(package,self.folder/'baseline_profile.json',candidate)
+            except Exception as exc:
+                self.validation_notes.append(str(exc))
+
+    def apply_profile(self):
+        from urdf_a_follow import Follower
+        candidate=self.folder/'profile.json'
+        payload=candidate.read_bytes()
+        if json.loads(payload).get('input_hand','right')!=self.app.input_hand:
+            raise ValueError('标定档案与当前手套手别不一致')
+        previous=self.app.follower
+        try:
+            updated=Follower(self.app.g,candidate)
+            updated.u=previous.u.copy()
+            updated.goal=updated.u.copy()
+            updated.g.assign(updated.u)
+            pending=self.app.profile.with_suffix('.json.tmp')
+            pending.write_bytes(payload)
+            pending.replace(self.app.profile)
+        except Exception:
+            previous.g.assign(previous.u)
+            raise
+        self.app.follower=updated
+        self.app.last_seen=None
+        return updated.profile_sha256
 
     def poll(self):
         if not self.alive:return
@@ -175,26 +237,30 @@ class CaptureGuide:
                         self.manifest['application_status']='validating'
                         write(self.folder/'manifest.json',self.manifest)
                         self.heading.set('补录完成，正在拟合并验证')
-                        self.instruction.set('可以放松右手。通过验证后，仿真会自动加载本轮档案。')
+                        self.instruction.set(f'可以放松{self.app.hand_name}。拟合成功后自动应用本轮档案，回放结果会显示在这里。')
                         self.status.set(str(self.folder));self.job=threading.Thread(target=self.calibrate,daemon=True);self.job.start()
         if self.job is not None and not self.job.is_alive():
             self.job=None
+            self.manifest.update(capture_completed=True,application_policy='latest_fitted',
+                                 validation_notes=self.validation_notes,
+                                 validation_status='skipped' if self.issue else ('warning' if self.validation_notes else 'passed'))
+            if self.issue is None:
+                try:
+                    self.manifest['loaded_profile_sha256']=self.apply_profile()
+                except Exception as exc:
+                    self.issue=f'加载失败：{exc}'
             if self.issue:
-                self.heading.set('本轮未应用，仍使用上一版')
-                self.instruction.set('本轮采集数据已保存，无需重新采集。新映射未通过效果检查，没有替换当前标定。')
+                self.heading.set('本轮标定未能加载')
+                self.instruction.set('采集数据已保存。')
                 self.status.set(self.issue)
-                self.manifest.update(capture_completed=True,application_status='rejected',application_error=self.issue)
-                write(self.folder/'manifest.json',self.manifest)
+                self.manifest.update(completed=False,application_status='failed',application_error=self.issue)
             else:
-                from urdf_a_follow import Follower
-                updated=Follower(self.app.g,self.folder/'profile.json')
-                updated.u=self.app.follower.u.copy();updated.goal=updated.u.copy()
-                updated.g.assign(updated.u)
-                write(self.app.profile,self.result);self.app.follower=updated;self.app.last_seen=None
-                self.manifest.update(completed=True,capture_completed=True,application_status='applied')
+                self.manifest.update(completed=True,application_status='applied')
                 self.manifest.pop('application_error',None)
-                write(self.folder/'manifest.json',self.manifest)
-                self.heading.set('验证通过，已切换到本轮标定');self.status.set(str(self.folder))
+                self.heading.set('已应用本轮标定')
+                self.instruction.set('回放提示：'+'；'.join(self.validation_notes) if self.validation_notes else '回放检查通过。')
+                self.status.set(str(self.folder))
+            write(self.folder/'manifest.json',self.manifest)
             self.button.configure(text='关闭',state='normal',command=self.close)
         self.window.after(100,self.poll)
 
