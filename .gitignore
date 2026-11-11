@@ -5,6 +5,10 @@ calibration/*
 !calibration/index_distance_maps.json
 !calibration/whole_hand_distance_manifest.json
 !calibration/whole_hand_distance_maps.json
+!calibration/local/
+calibration/local/*
+!calibration/local/profile.json
+!calibration/local/profile_left.json
 results/
 backups/
 sdk/
