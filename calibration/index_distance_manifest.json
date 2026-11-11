@@ -1,0 +1,10 @@
+{
+  "calibration/index_distance_maps.json": "16e788a20856fb25e9d4e510b54075bc0f411e1756ac8a1dd180d432ebf88eaf",
+  "hand_config.json": "820da86cb3b94233778769654610ebbef0a2c73238d0d065ed7a00fa59037c65",
+  "simulation_straight_profile.json": "f1caeff3eafda1a9476ee660c22672abad64cf726fa58eb6ca61009e051b3748",
+  "assets/hand.xml": "0ba5f5e045bb8c96f1258c0c9d1b189743c7730e46061d3d8a522d0763ddeacd",
+  "assets/meshes/link_8_0.stl": "797cc125cc0ae69fc012412e1301a55c42de3ec011a141cf11485b6291930ae0",
+  "assets/meshes/link_10_0.stl": "7ab4b47d23ade4c9a24b5b602c49a84b004bbe52eabf2a0a2204602b0be0de54",
+  "assets/meshes/link_12_0.stl": "0932a45e2026d75535d02b538bb14311cfe722513ddff794906dbd837acda1e5",
+  "calibration/pip_stop_gap.json": "7e2ea1c7116be8053c447bfae0bb91f21a8511bd52ce3b310e892402d4d4d8cb"
+}

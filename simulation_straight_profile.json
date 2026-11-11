@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "mode": "simulation_straight",
+  "name": "仅仿真：五指伸直与握拳",
+  "source_sha256": "935ec10b20a63f09e4271ae5ae66a56ca905b35626d214673856410fa96ec07b",
+  "units": "deg",
+  "hardware_enabled": false,
+  "coordinate_labels": ["thumb:CMC-OPP", "thumb:CMC-PS", "thumb:MCP-AA", "thumb:MCP", "thumb:IP", "index:MCP-AA", "index:MCP", "index:PIP", "middle:MCP-AA", "middle:MCP", "middle:PIP", "ring:MCP-AA", "ring:MCP", "ring:PIP", "pinky:MCP-AA", "pinky:MCP", "pinky:PIP"],
+  "default_native_reference_deg": 0.0,
+  "native_reference_overrides_deg": {
+    "axis_22": 6.916228875,
+    "axis_4": -6.916228875
+  },
+  "independent_ranges_deg": {
+    "thumb:MCP": [0, 75],
+    "thumb:IP": [0, 80],
+    "index:MCP": [0, 90],
+    "index:PIP": [0, 90],
+    "middle:MCP": [0, 90],
+    "middle:PIP": [0, 90],
+    "ring:MCP": [0, 90],
+    "ring:PIP": [0, 90],
+    "pinky:MCP": [0, 90],
+    "pinky:PIP": [0, 90]
+  },
+  "initial_coordinates_deg": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "fist_coordinates_deg": [30, 0, 0, 45, 55, 0, 75, 85, 0, 75, 85, 0, 75, 85, 0, 75, 85],
+  "method": "原URDF变换与网格不变；四指以原始转轴零读数作为名义伸直参考，拇指IP以骨段方向最小夹角修订零位；仅在独立MuJoCo实例中扩展转轴范围。DIP变化仍为0.8倍PIP。",
+  "scope": "仅几何展示，不是实物限位、自然手标定或无碰撞握拳；不得用于硬件、绳路、张力或舵机控制。原食指间距标定在此模式停用。",
+  "uncertainty": "实物材料、装配及测量不确定度未知；数值为名义模型参数，不代表制造精度。"
+}

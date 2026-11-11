@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source_sha256": "935ec10b20a63f09e4271ae5ae66a56ca905b35626d214673856410fa96ec07b",
+  "units": "deg",
+  "name": "原有限位内的半张开演示初始姿态",
+  "coordinate_labels": ["thumb:CMC-OPP", "thumb:CMC-PS", "thumb:MCP-AA", "thumb:MCP", "thumb:IP", "index:MCP-AA", "index:MCP", "index:PIP", "middle:MCP-AA", "middle:MCP", "middle:PIP", "ring:MCP-AA", "ring:MCP", "ring:PIP", "pinky:MCP-AA", "pinky:MCP", "pinky:PIP"],
+  "initial_coordinates_deg": [0, 0, 0, 0, 86.40695674615351, 0, 0, 0, 0, 46.59620225155043, 49.58693882809563, 0, 0, 0, 0, 0, 0],
+  "method": "保留食指/无名指/小指原始参考；中指在现有耦合和限位内拟合食指与无名指的平均骨段方向；拇指只调整IP，最小化近远端名义骨段方向差，根部三轴与MCP不变。",
+  "scope": "仿真展示初始姿态，不是实体机械零位或完全伸直位；不改变C矩阵、URDF、关节限位或原食指间距表。",
+  "uncertainty": "名义网格和指尖标记的制造/装配误差未知；不报告实物精度。"
+}

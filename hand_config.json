@@ -1,0 +1,384 @@
+{
+  "schema_version": 1,
+  "units": {
+    "position": "mm",
+    "angle": "deg",
+    "internal": "m/rad"
+  },
+  "palm_frame_origin_m": [
+    0.24472881317138673,
+    -0.009442423820495606,
+    0.05989179992675782
+  ],
+  "frame_definition": "P: original URDF axes, origin at nominal palm visual bounding-box center; not the old index J frame",
+  "source_sha256": "935ec10b20a63f09e4271ae5ae66a56ca905b35626d214673856410fa96ec07b",
+  "body_names": {
+    "掌骨_1": "f1_link_0",
+    "拇指中手骨-opp_1": "f1_link_1",
+    "拇指中手骨-ps_1": "f1_link_2",
+    "拇指基节骨-aa_1": "f1_link_3",
+    "拇指MCP自转轴_1": "f1_link_4",
+    "拇指基节骨-fe_1": "f1_link_5",
+    "拇指IP自转轴_1": "f1_link_6",
+    "拇指末节骨_1": "f1_link_7",
+    "食指基节骨-aa_1": "f1_link_8",
+    "食指MCP自转轴_1": "f1_link_9",
+    "食指基节骨-fe_1": "f1_link_10",
+    "食指PIP自转轴_1": "f1_link_11",
+    "食指中节骨_1": "f1_link_12",
+    "食指DIP自转轴_1": "f1_link_13",
+    "食指末节骨_1": "f1_link_14",
+    "中指基节骨-aa_1": "f1_link_15",
+    "中指MCP自转轴_1": "f1_link_16",
+    "中指基节骨-fe_1": "f1_link_17",
+    "中指PIP自转轴_1": "f1_link_18",
+    "中指中节骨_1": "f1_link_19",
+    "中指DIP自转轴_1": "f1_link_20",
+    "中指末节骨_1": "f1_link_21",
+    "无名指基节骨-aa_1": "f1_link_22",
+    "无名指CMC自转轴_1": "f1_link_23",
+    "无名指基节骨-fe_1": "f1_link_24",
+    "无名指PIP自转轴_1": "f1_link_25",
+    "无名指中节骨_1": "f1_link_26",
+    "无名指DIP自转轴_1": "f1_link_27",
+    "无名指末节骨_1": "f1_link_28",
+    "小指基节骨-aa_1": "f1_link_29",
+    "小指CMC自转轴_1": "f1_link_30",
+    "小指基节骨-fe_1": "f1_link_31",
+    "小指PIP自转轴_1": "f1_link_32",
+    "小指中节骨_1": "f1_link_33",
+    "小指DIP自转轴_1": "f1_link_34",
+    "小指末节骨_1": "f1_link_35"
+  },
+  "joint_names": {
+    "拇指CMC-OPP": "axis_0",
+    "拇指CMC-PS": "axis_1",
+    "拇指MCP-AA": "axis_2",
+    "拇指MCP-FE-AR": "axis_3",
+    "拇指IP-FE-AR": "axis_4",
+    "食指MCP-AA": "axis_5",
+    "食指MCP-FE-AR": "axis_6",
+    "食指PIP-FE-AR": "axis_7",
+    "食指DIP-FE-AR": "axis_8",
+    "中指MCP-AA": "axis_9",
+    "中指MCP-FE-AR": "axis_10",
+    "中指PIP-FE-AR": "axis_11",
+    "中指DIP-FE-AR": "axis_12",
+    "无名指MCP-AA": "axis_13",
+    "无名指MCP-FE-AR": "axis_14",
+    "无名指PIP-FE-AR": "axis_15",
+    "无名指DIP-FE-AR": "axis_16",
+    "小指MCP-AA": "axis_17",
+    "小指MCP-FE-AR": "axis_18",
+    "小指PIP-FE-AR": "axis_19",
+    "小指DIP-FE-AR": "axis_20",
+    "拇指MCP-FE-OR": "axis_21",
+    "拇指IP-FE-OR": "axis_22",
+    "食指MCP-FE-OR": "axis_23",
+    "食指PIP-FE-OR": "axis_24",
+    "食指-DIP-FE-OR": "axis_25",
+    "中指-MCP-FE-OR": "axis_26",
+    "中指-PIP-FE-OR": "axis_27",
+    "中指-DIP-FE-OR": "axis_28",
+    "无名指-MCP-FE-OR": "axis_29",
+    "无名指-PIP-FE-OR": "axis_30",
+    "无名指-DIP-FE-OR": "axis_31",
+    "小指-MCP-FE-OR": "axis_32",
+    "小指-PIP-FE-OR": "axis_33",
+    "小指-DIP-FE-OR": "axis_34"
+  },
+  "fingers": {
+    "thumb": {
+      "label": "拇指",
+      "coordinate_labels": [
+        "CMC-OPP",
+        "CMC-PS",
+        "MCP-AA",
+        "MCP",
+        "IP"
+      ],
+      "columns": [
+        [
+          [
+            "axis_0",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_1",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_2",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_21",
+            0.5
+          ],
+          [
+            "axis_3",
+            -0.5
+          ]
+        ],
+        [
+          [
+            "axis_22",
+            0.5
+          ],
+          [
+            "axis_4",
+            -0.5
+          ]
+        ]
+      ],
+      "dip_pip_ratio": null,
+      "ratio_status": "not applicable",
+      "tip_site": "tip_thumb",
+      "tip_body": "f1_link_7",
+      "tip_local_m": [
+        -0.027686666884240024,
+        0.007828424755425521,
+        1.0300633370928324e-05
+      ],
+      "tip_definition": "mean of farthest 5 percent distal visual vertices from distal axis; nominal landmark, not measured pad center"
+    },
+    "index": {
+      "label": "食指",
+      "coordinate_labels": [
+        "MCP-AA",
+        "MCP",
+        "PIP"
+      ],
+      "columns": [
+        [
+          [
+            "axis_5",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_23",
+            0.5
+          ],
+          [
+            "axis_6",
+            -0.5
+          ]
+        ],
+        [
+          [
+            "axis_24",
+            0.5
+          ],
+          [
+            "axis_7",
+            -0.5
+          ],
+          [
+            "axis_25",
+            0.4
+          ],
+          [
+            "axis_8",
+            -0.4
+          ]
+        ]
+      ],
+      "dip_pip_ratio": 0.8,
+      "ratio_status": "user-confirmed index",
+      "tip_site": "tip_index",
+      "tip_body": "f1_link_14",
+      "tip_local_m": [
+        -0.01519493023581,
+        0.011321126220968,
+        0.00011561822057171
+      ],
+      "tip_definition": "retained index engineering-package landmark"
+    },
+    "middle": {
+      "label": "中指",
+      "coordinate_labels": [
+        "MCP-AA",
+        "MCP",
+        "PIP"
+      ],
+      "columns": [
+        [
+          [
+            "axis_9",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_26",
+            0.5
+          ],
+          [
+            "axis_10",
+            -0.5
+          ]
+        ],
+        [
+          [
+            "axis_27",
+            0.5
+          ],
+          [
+            "axis_11",
+            -0.5
+          ],
+          [
+            "axis_28",
+            0.4
+          ],
+          [
+            "axis_12",
+            -0.4
+          ]
+        ]
+      ],
+      "dip_pip_ratio": 0.8,
+      "ratio_status": "provisional simulation assumption; configurable",
+      "tip_site": "tip_middle",
+      "tip_body": "f1_link_21",
+      "tip_local_m": [
+        0.02155439699339119,
+        0.002534189248802848,
+        4.7493531788420395e-05
+      ],
+      "tip_definition": "mean of farthest 5 percent distal visual vertices from distal axis; nominal landmark, not measured pad center"
+    },
+    "ring": {
+      "label": "无名指",
+      "coordinate_labels": [
+        "MCP-AA",
+        "MCP",
+        "PIP"
+      ],
+      "columns": [
+        [
+          [
+            "axis_13",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_29",
+            0.5
+          ],
+          [
+            "axis_14",
+            -0.5
+          ]
+        ],
+        [
+          [
+            "axis_30",
+            0.5
+          ],
+          [
+            "axis_15",
+            -0.5
+          ],
+          [
+            "axis_31",
+            0.4
+          ],
+          [
+            "axis_16",
+            -0.4
+          ]
+        ]
+      ],
+      "dip_pip_ratio": 0.8,
+      "ratio_status": "provisional simulation assumption; configurable",
+      "tip_site": "tip_ring",
+      "tip_body": "f1_link_28",
+      "tip_local_m": [
+        0.0162613812089946,
+        -0.01107635710035221,
+        -4.657401387459451e-05
+      ],
+      "tip_definition": "mean of farthest 5 percent distal visual vertices from distal axis; nominal landmark, not measured pad center"
+    },
+    "pinky": {
+      "label": "小指",
+      "coordinate_labels": [
+        "MCP-AA",
+        "MCP",
+        "PIP"
+      ],
+      "columns": [
+        [
+          [
+            "axis_17",
+            1.0
+          ]
+        ],
+        [
+          [
+            "axis_32",
+            0.5
+          ],
+          [
+            "axis_18",
+            -0.5
+          ]
+        ],
+        [
+          [
+            "axis_33",
+            0.5
+          ],
+          [
+            "axis_19",
+            -0.5
+          ],
+          [
+            "axis_34",
+            0.4
+          ],
+          [
+            "axis_20",
+            -0.4
+          ]
+        ]
+      ],
+      "dip_pip_ratio": 0.8,
+      "ratio_status": "provisional simulation assumption; configurable",
+      "tip_site": "tip_pinky",
+      "tip_body": "f1_link_35",
+      "tip_local_m": [
+        0.013435323351411642,
+        -0.009180415460746195,
+        -0.00011464114031880642
+      ],
+      "tip_definition": "mean of farthest 5 percent distal visual vertices from distal axis; nominal landmark, not measured pad center"
+    }
+  },
+  "distance_calibration": {
+    "joint": "PIP",
+    "description": "用户确认：原始 PIP 近端 facet 6 青色面与远端 facet 1 红色面",
+    "zero_gap_mm": 0.059441948066070914,
+    "gap_at_90_deg_mm": 1.6882579071684418,
+    "full_scale_angle_deg": 89.99998127603166,
+    "status": "user_confirmed_faces; nominal_mesh_sampling_not_hardware_calibration",
+    "method": "sampled_pchip",
+    "table_file": "calibration/pip_stop_gap.json",
+    "table_sha256": "7e2ea1c7116be8053c447bfae0bb91f21a8511bd52ce3b310e892402d4d4d8cb"
+  },
+  "preview_velocity_deg_s": 65.0,
+  "orientation_weight_mm_per_rad": 20.0,
+  "position_tolerance_mm": 0.2,
+  "orientation_tolerance_deg": 1.0,
+  "scope": "joint-only nominal kinematics; no cables, collision, physical coupling, glove or hardware control"
+}

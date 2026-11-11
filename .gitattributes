@@ -1,0 +1,7 @@
+# Preserve the byte hashes used by model/profile and geometry-table checks.
+assets/** -text whitespace=-trailing-space,cr-at-eol
+*.json -text whitespace=cr-at-eol
+*.py text eol=lf whitespace=-blank-at-eof
+*.md text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf

@@ -1,0 +1,2193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="F1绳驱手-URDF-A">
+  <link
+    name="base">
+    <inertial>
+      <origin
+        xyz="0.10461 -0.00065853 1.2407E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.21985" />
+      <inertia
+        ixx="0.00020012"
+        ixy="-8.2798E-07"
+        ixz="2.0634E-07"
+        iyy="0.00074507"
+        iyz="4.8727E-08"
+        izz="0.00061641" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/base.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="r_wrist_abd">
+    <inertial>
+      <origin
+        xyz="0.00200083583889105 0.0139216475954419 7.90455010083141E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.018708711639142" />
+      <inertia
+        ixx="1.8397269253418E-06"
+        ixy="1.21645692087018E-07"
+        ixz="5.74056331214433E-10"
+        iyy="1.85007306147694E-06"
+        iyz="6.22265765028861E-10"
+        izz="6.44159799474503E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_wrist_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_wrist_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_wrist_abd"
+    type="revolute">
+    <origin
+      xyz="0.1984 -0.020377 0"
+      rpy="0 0 0" />
+    <parent
+      link="base" />
+    <child
+      link="r_wrist_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.50615"
+      upper="0.50615"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_wrist_flex_link">
+    <inertial>
+      <origin
+        xyz="0.046849981546747 -0.00353472995751002 0.0104323278066872"
+        rpy="0 0 0" />
+      <mass
+        value="0.161558543124604" />
+      <inertia
+        ixx="4.32984098269001E-05"
+        ixy="1.10841183067339E-06"
+        ixz="8.39670995695824E-06"
+        iyy="0.000105056666443644"
+        iyz="-2.11226392521826E-06"
+        izz="6.79240494639728E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_wrist_flex_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_wrist_flex_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_wrist_flex_joint"
+    type="revolute">
+    <origin
+      xyz="0.0063 0.0216 -0.017"
+      rpy="0 0 0" />
+    <parent
+      link="r_wrist_abd" />
+    <child
+      link="r_wrist_flex_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.69813"
+      upper="1.3963"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_cmc_inward">
+    <inertial>
+      <origin
+        xyz="0.0132707743081492 -0.000171178776989179 0.000702642268297041"
+        rpy="0 0 0" />
+      <mass
+        value="0.0330743466020277" />
+      <inertia
+        ixx="1.92572592690011E-06"
+        ixy="-8.21154145307622E-09"
+        ixz="2.1212693559903E-07"
+        iyy="2.10007735017282E-06"
+        iyz="-2.51508929377023E-08"
+        izz="1.98459727591709E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_cmc_inward.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_cmc_inward.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_cmc_inward"
+    type="revolute">
+    <origin
+      xyz="0.015788 0.0074742 0.040096"
+      rpy="-0.3504 -0.086934 0.0076251" />
+    <parent
+      link="r_wrist_flex_link" />
+    <child
+      link="r_thumb_cmc_inward" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-0.34906"
+      upper="1.7453"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_cmc_spin">
+    <inertial>
+      <origin
+        xyz="0.00644016804794317 0.00175876663223618 0.00149551937807677"
+        rpy="0 0 0" />
+      <mass
+        value="0.00445879591801659" />
+      <inertia
+        ixx="6.12066926050713E-08"
+        ixy="6.73911094471427E-09"
+        ixz="5.73088985853801E-09"
+        iyy="1.41238051184622E-07"
+        iyz="-1.31822681487461E-08"
+        izz="1.36944216300455E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_cmc_spin.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_cmc_spin.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_cmc_spin"
+    type="revolute">
+    <origin
+      xyz="0.024668 -0.001125 0.011545"
+      rpy="-1.4577 -0.69417 -0.081337" />
+    <parent
+      link="r_thumb_cmc_inward" />
+    <child
+      link="r_thumb_cmc_spin" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-0.34907"
+      upper="1.0472"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_mcp_abd">
+    <inertial>
+      <origin
+        xyz="0.00457565771755716 -0.00254302296758854 -6.7187256437562E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.0137529660483943" />
+      <inertia
+        ixx="5.12866869437707E-07"
+        ixy="-5.83225789285904E-08"
+        ixz="4.82729274179974E-13"
+        iyy="8.88920590838601E-07"
+        iyz="5.22523312171929E-12"
+        izz="5.36000908827893E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_mcp_abd"
+    type="revolute">
+    <origin
+      xyz="0.019817 0.0026664 0.0022672"
+      rpy="0.70467 0 0" />
+    <parent
+      link="r_thumb_cmc_spin" />
+    <child
+      link="r_thumb_mcp_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.7854"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_mcp_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00820000497728901 -1.0617159929005E-11 0.00649999999999354"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082992E-07" />
+      <inertia
+        ixx="4.11187489241394E-14"
+        ixy="3.15544362088405E-30"
+        ixz="7.73083687116592E-29"
+        iyy="4.11187489241393E-14"
+        iyz="-3.25250506666244E-25"
+        izz="5.59523947709081E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_mcp_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.01446 -0.0061221 -0.0064997"
+      rpy="0 0 0" />
+    <parent
+      link="r_thumb_mcp_abd" />
+    <child
+      link="r_thumb_mcp_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.087266"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_mcp_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0127173143092221 -0.00139181913323824 0.00650007702835742"
+        rpy="0 0 0" />
+      <mass
+        value="0.0177542290895119" />
+      <inertia
+        ixx="9.32260643556048E-07"
+        ixy="-3.10565794245994E-08"
+        ixz="-9.55903407859696E-12"
+        iyy="1.73378155443122E-06"
+        iyz="4.84710783402404E-12"
+        izz="1.66636302674336E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_mcp_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_mcp_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0082 0 0"
+      rpy="0 0 0.17453" />
+    <parent
+      link="r_thumb_mcp_flex_1" />
+    <child
+      link="r_thumb_mcp_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.087266"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_ip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00809998664227679 -4.76230166412961E-13 0.00500000273710968"
+        rpy="0 0 0" />
+      <mass
+        value="4.5835743808299E-07" />
+      <inertia
+        ixx="4.1118748924139E-14"
+        ixy="-4.73316543132607E-30"
+        ixz="1.39628380224119E-28"
+        iyy="4.1118748924139E-14"
+        iyz="1.68027372812076E-28"
+        izz="5.59523947709078E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_ip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_ip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_ip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.026375 -0.0046507 0.0015"
+      rpy="0 0 -0.17453" />
+    <parent
+      link="r_thumb_mcp_flex_2" />
+    <child
+      link="r_thumb_ip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.087266"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_thumb_ip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0113046982337319 -0.00143051449663126 0.00500227583564036"
+        rpy="0 0 0" />
+      <mass
+        value="0.0100593990578742" />
+      <inertia
+        ixx="2.97867417217709E-07"
+        ixy="-3.75600438238816E-08"
+        ixz="-7.63715111069423E-11"
+        iyy="7.43584078754573E-07"
+        iyz="-3.82462495132307E-11"
+        izz="6.72318973981804E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_ip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_thumb_ip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_thumb_ip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0.17453" />
+    <parent
+      link="r_thumb_ip_flex_1" />
+    <child
+      link="r_thumb_ip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.087266"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_mcp_abd">
+    <inertial>
+      <origin
+        xyz="0.00559728659456993 -0.00222952374660525 8.19196756887686E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0134263578342251" />
+      <inertia
+        ixx="3.68635413818712E-07"
+        ixy="-2.75456554087581E-08"
+        ixz="8.84382305322827E-12"
+        iyy="9.65944992150232E-07"
+        iyz="-4.42805449116904E-12"
+        izz="7.0625763274968E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_mcp_abd"
+    type="revolute">
+    <origin
+      xyz="0.081273 0.0050194 0.042592"
+      rpy="-0.089882 -0.00070813 -0.0078571" />
+    <parent
+      link="r_wrist_flex_link" />
+    <child
+      link="r_index_mcp_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.087266"
+      upper="0.43633"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_mcp_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00850000000009293 7.86013454563174E-06 0.00650022084372671"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241398E-14"
+        ixy="8.38164711797325E-31"
+        ixz="-1.65672601605255E-28"
+        iyy="4.11187489241398E-14"
+        iyz="3.69912909364769E-27"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_mcp_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.015984 -0.0044471 -0.0065002"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_mcp_abd" />
+    <child
+      link="r_index_mcp_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_mcp_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0208800333513341 0.000942440518498702 0.00650008640703216"
+        rpy="0 0 0" />
+      <mass
+        value="0.0234330976437598" />
+      <inertia
+        ixx="8.76754632967511E-07"
+        ixy="1.51541791675202E-07"
+        ixz="4.73711582593499E-11"
+        iyy="4.12649762398756E-06"
+        iyz="1.72457299777107E-11"
+        izz="4.13577991566223E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_mcp_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_mcp_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0085 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_mcp_flex_1" />
+    <child
+      link="r_index_mcp_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_pip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000000088 1.66533453693773E-16 0.0039999999999999"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241399E-14"
+        ixy="2.12006368278147E-30"
+        ixz="-6.33843930350116E-28"
+        iyy="4.11187489241399E-14"
+        iyz="-1.41040619410843E-29"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_pip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_pip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_pip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.04324 0 0.0025"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_mcp_flex_2" />
+    <child
+      link="r_index_pip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_pip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0113259695996072 0.000774614454952541 0.00399998239845841"
+        rpy="0 0 0" />
+      <mass
+        value="0.00902878303863925" />
+      <inertia
+        ixx="2.52866598784098E-07"
+        ixy="1.52027436615288E-10"
+        ixz="-2.36274528374595E-13"
+        iyy="6.88369124528514E-07"
+        iyz="4.46427002161822E-12"
+        izz="6.33877098984833E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_pip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_pip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_pip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_pip_flex_1" />
+    <child
+      link="r_index_pip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_dip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000000149 4.25007251614318E-16 0.00400000000000848"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241399E-14"
+        ixy="-1.10933564796705E-30"
+        ixz="2.37017244861911E-29"
+        iyy="4.11187489241399E-14"
+        iyz="-7.4556971467248E-29"
+        izz="5.59523947709088E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_dip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_dip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_dip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.023044 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_pip_flex_2" />
+    <child
+      link="r_index_dip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_index_dip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.00711905335488072 -0.000147213826708365 0.00400996655265271"
+        rpy="0 0 0" />
+      <mass
+        value="0.00409872134739548" />
+      <inertia
+        ixx="6.60066484752379E-08"
+        ixy="1.01446980985353E-09"
+        ixz="-5.40995158461726E-11"
+        iyy="1.64750164059876E-07"
+        iyz="-7.16153790455945E-13"
+        izz="1.49029085738754E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_dip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_index_dip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_index_dip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_index_dip_flex_1" />
+    <child
+      link="r_index_dip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_mcp_abd">
+    <inertial>
+      <origin
+        xyz="0.00559729220259736 -0.00222951736899749 8.00995811726934E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0134260387671204" />
+      <inertia
+        ixx="3.68628211442787E-07"
+        ixy="-2.75449415559044E-08"
+        ixz="8.80080454446739E-12"
+        iyy="9.65923151693219E-07"
+        iyz="-4.33799204680598E-12"
+        izz="7.06240322441783E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_mcp_abd"
+    type="revolute">
+    <origin
+      xyz="0.083301 0.0041824 0.022347"
+      rpy="0 0 -3.8714E-05" />
+    <parent
+      link="r_wrist_flex_link" />
+    <child
+      link="r_middle_mcp_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.087266"
+      upper="0.087266"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_mcp_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000009264 1.44990931100313E-05 0.00650030047092031"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241399E-14"
+        ixy="6.19282773617716E-31"
+        ixz="2.97867910115849E-29"
+        iyy="4.11187489241399E-14"
+        iyz="1.65878708345988E-29"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_mcp_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.015984 -0.0044471 -0.0065002"
+      rpy="0 0 0" />
+    <parent
+      link="r_middle_mcp_abd" />
+    <child
+      link="r_middle_mcp_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_mcp_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0227514956936452 0.000816474219356591 0.00649998383252085"
+        rpy="0 0 0" />
+      <mass
+        value="0.0263948706159051" />
+      <inertia
+        ixx="1.00509415694576E-06"
+        ixy="1.69379130307472E-07"
+        ixz="4.26866365369122E-11"
+        iyy="5.37929871280225E-06"
+        iyz="1.57239916789363E-11"
+        izz="5.4051334299132E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_mcp_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_mcp_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 1.4499E-05 0"
+      rpy="0 0 3.8714E-05" />
+    <parent
+      link="r_middle_mcp_flex_1" />
+    <child
+      link="r_middle_mcp_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_pip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000000044 1.18655085756814E-15 0.00400000000001649"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241399E-14"
+        ixy="-2.59615356503399E-31"
+        ixz="5.42178958331508E-29"
+        iyy="4.11187489241399E-14"
+        iyz="-9.31033215586312E-29"
+        izz="5.59523947709088E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_pip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_pip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_pip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.047068 0 0.0025"
+      rpy="0 0 -3.8714E-05" />
+    <parent
+      link="r_middle_mcp_flex_2" />
+    <child
+      link="r_middle_pip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_pip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0128169425791961 0.000720719245634235 0.00399977733154718"
+        rpy="0 0 0" />
+      <mass
+        value="0.0106706281643683" />
+      <inertia
+        ixx="3.06497970262362E-07"
+        ixy="6.67633293924937E-10"
+        ixz="1.57843188252223E-12"
+        iyy="9.69978561788967E-07"
+        iyz="-7.15723636644346E-13"
+        izz="9.10148361127157E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_pip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_pip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_pip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_middle_pip_flex_1" />
+    <child
+      link="r_middle_pip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_dip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00809999999995364 -1.52482193538361E-15 0.00399999999999538"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241399E-14"
+        ixy="-1.43164002416025E-30"
+        ixz="-5.84551935710085E-29"
+        iyy="4.11187489241399E-14"
+        iyz="-9.78253159434334E-29"
+        izz="5.59523947709088E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_dip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_dip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_dip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.026484 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_middle_pip_flex_2" />
+    <child
+      link="r_middle_dip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_middle_dip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.00824221394786889 -0.000152438036265702 0.00399992370401004"
+        rpy="0 0 0" />
+      <mass
+        value="0.00473369111204037" />
+      <inertia
+        ixx="7.83336604913031E-08"
+        ixy="2.15717940255497E-09"
+        ixz="2.10492112525845E-12"
+        iyy="2.20972519783748E-07"
+        iyz="7.69197972546746E-13"
+        izz="2.03439068501774E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_dip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_middle_dip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_middle_dip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_middle_dip_flex_1" />
+    <child
+      link="r_middle_dip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_mcp_abd">
+    <inertial>
+      <origin
+        xyz="0.00559730107972362 -0.00222953219084918 8.05512347865078E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0134263401944698" />
+      <inertia
+        ixx="3.68636495956074E-07"
+        ixy="-2.75456173437442E-08"
+        ixz="8.85772513064065E-12"
+        iyy="9.6594448826548E-07"
+        iyz="-4.43183516438947E-12"
+        izz="7.06256001270603E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_mcp_abd"
+    type="revolute">
+    <origin
+      xyz="0.081129 0.0050635 0.0019425"
+      rpy="0.086602 0.00065754 -0.0075735" />
+    <parent
+      link="r_wrist_flex_link" />
+    <child
+      link="r_ring_mcp_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.43633"
+      upper="0.087266"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_mcp_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000008687 -9.05577167847199E-07 0.00650000000001432"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241398E-14"
+        ixy="1.79958894003543E-30"
+        ixz="3.96657187690813E-26"
+        iyy="4.11187489241398E-14"
+        iyz="1.34362173936993E-28"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_mcp_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.015984 -0.0044471 -0.0065002"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_mcp_abd" />
+    <child
+      link="r_ring_mcp_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_mcp_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0209595937517972 0.000942399299027535 0.00649966951661641"
+        rpy="0 0 0" />
+      <mass
+        value="0.0235653646113425" />
+      <inertia
+        ixx="8.82374645788815E-07"
+        ixy="1.53623411472951E-07"
+        ixz="3.49828945737094E-11"
+        iyy="4.17911884476882E-06"
+        iyz="3.21924975950404E-11"
+        izz="4.18923012957589E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_mcp_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_mcp_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_mcp_flex_1" />
+    <child
+      link="r_ring_mcp_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_pip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000000066 -5.03069808033274E-17 0.00399999999999996"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241398E-14"
+        ixy="-4.4866463984445E-30"
+        ixz="-2.84973033104831E-28"
+        iyy="4.11187489241398E-14"
+        iyz="-3.33685732244826E-29"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_pip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_pip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_pip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.043426 0 0.0025"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_mcp_flex_2" />
+    <child
+      link="r_ring_pip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_pip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0119758627437196 0.000764862350805551 0.00400070090626044"
+        rpy="0 0 0" />
+      <mass
+        value="0.00949603446509081" />
+      <inertia
+        ixx="2.63897841360552E-07"
+        ixy="-1.97606209410867E-09"
+        ixz="1.04512762544364E-11"
+        iyy="7.80843545014802E-07"
+        iyz="-9.79209335396983E-13"
+        izz="7.24725989971554E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_pip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_pip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_pip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_pip_flex_1" />
+    <child
+      link="r_ring_pip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_dip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810040726232264 1.69121900145744E-07 0.00400000000000003"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082996E-07" />
+      <inertia
+        ixx="4.11187489241398E-14"
+        ixy="1.18329135783152E-30"
+        ixz="-3.46834336305971E-28"
+        iyy="4.11187489241399E-14"
+        iyz="1.6882448332217E-28"
+        izz="5.59523947709087E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_dip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_dip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_dip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.024679 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_pip_flex_2" />
+    <child
+      link="r_ring_dip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_ring_dip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.00750302472077258 -0.000160835977110429 0.00400855190298767"
+        rpy="0 0 0" />
+      <mass
+        value="0.00423147661852734" />
+      <inertia
+        ixx="6.91088782027186E-08"
+        ixy="1.76915734583391E-09"
+        ixz="-5.17136363561457E-11"
+        iyy="1.78052258159435E-07"
+        iyz="3.20049148500084E-13"
+        izz="1.6188167389415E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_dip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_ring_dip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_ring_dip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081004 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_ring_dip_flex_1" />
+    <child
+      link="r_ring_dip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_mcp_abd">
+    <inertial>
+      <origin
+        xyz="0.00597806109435178 -0.00253086126132688 -2.05785832124716E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0137565301847593" />
+      <inertia
+        ixx="3.86947964744E-07"
+        ixy="-2.61229150474279E-08"
+        ixz="2.29042300670289E-11"
+        iyy="1.01303112803587E-06"
+        iyz="-1.14469653652282E-12"
+        izz="7.36289257759468E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_abd.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_abd.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_mcp_abd"
+    type="revolute">
+    <origin
+      xyz="0.076676 0.007715 -0.018792"
+      rpy="0.16915 0.0050717 -0.029688" />
+    <parent
+      link="r_wrist_flex_link" />
+    <child
+      link="r_little_mcp_abd" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.7854"
+      upper="0.087266"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_mcp_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00820000000009369 -0.000597739799140063 0.00500007962711264"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082994E-07" />
+      <inertia
+        ixx="4.11187489241395E-14"
+        ixy="-2.16936748935778E-30"
+        ixz="-4.98650036985114E-28"
+        iyy="4.11187489241395E-14"
+        iyz="5.60124293383595E-29"
+        izz="5.59523947709083E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_mcp_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.015984 -0.0044471 -0.0050002"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_mcp_abd" />
+    <child
+      link="r_little_mcp_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_mcp_flex_2">
+    <inertial>
+      <origin
+        xyz="0.0119914091667276 0.000734554709391119 0.00500048107198059"
+        rpy="0 0 0" />
+      <mass
+        value="0.00999996878189622" />
+      <inertia
+        ixx="2.96420549612564E-07"
+        ixy="1.40773437207643E-08"
+        ixz="-3.58406103702142E-12"
+        iyy="7.66463648324697E-07"
+        iyz="2.20536346002996E-12"
+        izz="7.43674131161463E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_mcp_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_mcp_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0082 -0.00059774 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_mcp_flex_1" />
+    <child
+      link="r_little_mcp_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_pip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00809999999999922 -4.52762827229947E-16 0.0040000000000001"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082995E-07" />
+      <inertia
+        ixx="4.11187489241398E-14"
+        ixy="-9.86076131526265E-32"
+        ixz="-2.04918316497942E-28"
+        iyy="4.11187489241398E-14"
+        iyz="1.97377604701171E-28"
+        izz="5.59523947709086E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_pip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_pip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_pip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.024366 0 0.001"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_mcp_flex_2" />
+    <child
+      link="r_little_pip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_pip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.00710082871645706 0.00046342074294399 0.0039860627216728"
+        rpy="0 0 0" />
+      <mass
+        value="0.00451629617424677" />
+      <inertia
+        ixx="1.04645564157607E-07"
+        ixy="1.19331808827452E-10"
+        ixz="-4.09991193453836E-11"
+        iyy="2.03657337324941E-07"
+        iyz="6.42255548585093E-11"
+        izz="1.80404769051029E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_pip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_pip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_pip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_pip_flex_1" />
+    <child
+      link="r_little_pip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.7854"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_dip_flex_1">
+    <inertial>
+      <origin
+        xyz="0.00810000000063943 -1.04004818299308E-09 0.00400000000000004"
+        rpy="0 0 0" />
+      <mass
+        value="4.58357438082994E-07" />
+      <inertia
+        ixx="4.11187489241396E-14"
+        ixy="-1.38050658413677E-30"
+        ixz="-1.44447764452103E-28"
+        iyy="4.11187489241396E-14"
+        iyz="1.84245242684508E-29"
+        izz="5.59523947709084E-14" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_dip_flex_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_dip_flex_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_dip_flex_1"
+    type="revolute">
+    <origin
+      xyz="0.014643 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_pip_flex_2" />
+    <child
+      link="r_little_dip_flex_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="r_little_dip_flex_2">
+    <inertial>
+      <origin
+        xyz="0.00642718597795833 2.69472562000189E-05 0.00398520610636666"
+        rpy="0 0 0" />
+      <mass
+        value="0.00292254119960855" />
+      <inertia
+        ixx="3.80161748961102E-08"
+        ixy="1.14398984419997E-09"
+        ixz="6.11642159117502E-11"
+        iyy="9.64316765573914E-08"
+        iyz="1.57128762404717E-12"
+        izz="8.94500286686272E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_dip_flex_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://F1绳驱手-URDF-A/meshes/r_little_dip_flex_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="r_little_dip_flex_2"
+    type="revolute">
+    <origin
+      xyz="0.0081 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="r_little_dip_flex_1" />
+    <child
+      link="r_little_dip_flex_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0.62832"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
