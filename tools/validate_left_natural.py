@@ -21,7 +21,7 @@ def replay(g,profile,frames,missing):
         previous=stamp;before=m.u.copy()
         m.command(frame);m.advance(dt);g.validate(m.u)
         clearance=g.clearance();clearances.append(clearance)
-        if clearance<.6-1.e-7 or np.max(abs(np.degrees(m.u-before)))>m.config['max_joint_speed_deg_s']*dt+1.e-5:
+        if not m.sweep.safe(m.u) or np.max(abs(np.degrees(m.u-before)))>m.config['max_joint_speed_deg_s']*dt+1.e-5:
             raise ValueError('左手回放越过间隙或速度限制')
         blocked+=int(m.blocked)
         points=np.asarray(frame['positions_m'])

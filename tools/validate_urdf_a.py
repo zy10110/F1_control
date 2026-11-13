@@ -51,7 +51,7 @@ def run(package,folder,profile=None,supplement=None):
         m.command(frame);before=m.u.copy();u=m.advance(interval)
         clearance=g.clearance()
         speed=np.max(np.abs(np.degrees(u-before)))/interval
-        if clearance<.6-1e-8 or speed>m.config['max_joint_speed_deg_s']+.001:
+        if not m.sweep.safe(m.u) or speed>m.config['max_joint_speed_deg_s']+.001:
             raise ValueError('实际轨迹越过间隙或速度约束')
         return dict(clearance=clearance,speed=speed,blocked=int(m.blocked))
     def warm(m,fr):

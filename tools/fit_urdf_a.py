@@ -20,7 +20,7 @@ from g7_teleop import load_g7_config, BASE
 
 def left_supplement_settings(original):
     settings={k:original[k] for k in ('input_hand','source_geometry','angle_reference','mirror_base_sha256',
-        'pinch_angle_updates','pinch_round','retained_contact_records','official_pose_updates','official_reference_session','segment_alignment') if k in original}
+        'pinch_angle_updates','pinch_round','retained_contact_records','official_pose_updates','official_reference_session','segment_alignment','fine_motion_response','joint_surface_touch') if k in original}
     if 'angle_derived_spacing' in original:
         settings['angle_derived_spacing']=dict(original['angle_derived_spacing'],preserve_open_gap=True)
     return settings
@@ -67,6 +67,10 @@ def fit(package,folder,supplement=None):
         if original.get('input_hand')!='left':raise ValueError('左手补录缺少独立镜像基准')
         neutral=original['neutral']
         migrated=left_supplement_settings(original)
+    elif supplement and (supplement.parent/'baseline_profile.json').is_file():
+        original=json.loads((supplement.parent/'baseline_profile.json').read_bytes())
+        if original.get('fine_motion_response') and original.get('input_hand','right')=='right':
+            migrated={k:original[k] for k in ('fine_motion_response','angle_derived_spacing','segment_alignment','joint_surface_touch') if k in original}
     source=SourceHand(neutral)
     g=NativeHand(package);fk=verify_fk(package,g)
     old=HandGeometry('simulation_straight')
@@ -153,7 +157,7 @@ def fit(package,folder,supplement=None):
                 blocks=blocks,angular_corrections=corrections,middle_widths=widths,wrist_to_model=wrist_to_model,
                 supplement=str(supplement.resolve()) if supplement is not None else None,
                 training_manifest=str(manifest.resolve()),training_stages=list(stage_frames),fk_crosscheck=fk)
-    return update_left_natural_fit(record,original) if migrated else record
+    return update_left_natural_fit(record,original) if migrated.get('input_hand')=='left' else record
 
 
 if __name__=='__main__':

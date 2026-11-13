@@ -120,7 +120,7 @@ def replay(g,path,rows,f=None,middle_unavailable=None):
         stamp=frame['timestamp_ns'];dt=.025 if last is None else (stamp-last)*1e-9;last=stamp
         m.command(frame);previous=m.u.copy();m.advance(dt)
         clearance=g.clearance();clear.append(clearance)
-        if clearance<.6-1e-7 or np.max(np.abs(np.degrees(m.u-previous)))>m.config['max_joint_speed_deg_s']*dt+.0001:
+        if not m.sweep.safe(m.u) or np.max(np.abs(np.degrees(m.u-previous)))>m.config['max_joint_speed_deg_s']*dt+.0001:
             raise ValueError('回放超出间隙或速度限制')
         if m.middle_unavailable and not np.allclose(m.u[g.cols['middle']],m.held_middle):
             raise ValueError('停用的中指出现运动')

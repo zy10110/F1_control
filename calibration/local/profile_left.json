@@ -9,7 +9,8 @@
     "max_change_deg": 8.0,
     "posture_mm_per_rad": 5.0,
     "iterations": 4,
-    "preserve_open_gap": true
+    "preserve_open_gap": true,
+    "aperture_range_mm": 38.0
   },
   "middle_unavailable": false,
   "kind": "urdf_a_natural_v2",
@@ -17412,7 +17413,8 @@
   ],
   "segment_alignment": {
     "max_change_deg": 18,
-    "posture_weight": 0.12
+    "posture_weight": 0.12,
+    "thumb_bend_plane": true
   },
   "official_pose_updates": {
     "thumb": {
@@ -19655,5 +19657,12 @@
       ]
     }
   },
-  "official_reference_session": "C:\\Users\\lenovo\\Desktop\\中科慧思-work\\F1_整手IK仿真\\calibration\\official_pose_20261111_114526_802683\\manifest.json"
+  "official_reference_session": "C:\\Users\\lenovo\\Desktop\\中科慧思-work\\F1_整手IK仿真\\calibration\\official_pose_20261111_114526_802683\\manifest.json",
+  "fine_motion_response": {
+    "transition_deg": 3.0,
+    "max_rate_ratio": 1.65
+  },
+  "joint_surface_touch": {
+    "radius_mm": 13.0
+  }
 }

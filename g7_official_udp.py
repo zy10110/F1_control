@@ -11,19 +11,24 @@ from hand_kinematics import ROOT
 
 
 class OfficialUDPReceiver:
-    def __init__(self, decoder, hand, bind='127.0.0.1', port=15001):
+    def __init__(self, decoder, hand, bind='127.0.0.1', port=15001, imu_sink=None):
         if bind != '127.0.0.1':
             raise ValueError('官方上位机入口仅绑定本机 127.0.0.1')
+        self.imu_sink = imu_sink
         self.decoder = decoder
         self.hand = 1 if hand == 'left' else 2
         self.bind, self.port = bind, int(port)
         self.last_seq = None
+        self.last_arrival = None
         self.invalid = self.duplicates = self.other_hand = 0
         self.packet_count = 0
         self.last_packet_bytes = 0
         self.last_error = None
 
     def accept(self, packet):
+        if self.imu_sink is not None and packet.startswith(b"MINF"):
+            self.imu_sink(packet)
+            return None
         self.packet_count += 1
         self.last_packet_bytes = len(packet)
         try:
@@ -46,12 +51,15 @@ class OfficialUDPReceiver:
         # restarting the upstream app without reconnecting the F1 receiver.
         seq = int(frame['seq'])
         stamp = int(frame['timestamp_ns'])
+        now=time.monotonic()
         if self.last_seq is not None:
             advance = (seq - self.last_seq) & 0xffffffff
-            if advance == 0 or (advance > 0x80000000 and stamp >= self.last_stamp):
+            restarted=now-self.last_arrival>.5 and stamp>self.last_stamp
+            if not restarted and (advance == 0 or (advance > 0x80000000 and stamp >= self.last_stamp)):
                 self.duplicates += 1
                 return None
         self.last_seq, self.last_stamp = seq, stamp
+        self.last_arrival=now
         self.last_error = None
         return frame
 

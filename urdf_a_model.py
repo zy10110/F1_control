@@ -101,6 +101,33 @@ class NativeHand:
         for array in (self.C, self.lo, self.hi, *(v for pair in self.pad.values() for v in pair)):
             digest.update(np.asarray(array,dtype='<f8').tobytes())
         self.geometry_id = digest.hexdigest()
+        self.bind_control_pose()
+
+    def bind_control_pose(self):
+        """Keep execution FK separate from the palm-local IK working data."""
+        self.control_data = mujoco.MjData(self.model)
+        wrist_ids = [self.model.joint(name).id for name in ('r_wrist_abd','r_wrist_flex_joint')]
+        self.wrist_qadr = self.model.jnt_qposadr[wrist_ids]
+        self.roll_pivot = self.data.xanchor[wrist_ids[0]].copy()
+        self.control_joint_names = [self.model.joint(j).name for j in range(self.model.njnt)]
+        self.set_control_pose(np.zeros(17),np.zeros(3))
+
+    def set_control_pose(self, digits, wrist):
+        wrist = np.asarray(wrist,dtype=float)
+        if wrist.shape != (3,) or not np.isfinite(wrist).all():
+            raise ValueError('无效腕部姿态')
+        q = self.C @ self.validate(digits)
+        q[self.wrist_qadr] = wrist[1:]
+        if np.any(q<self.model.jnt_range[:,0]-1.e-9) or np.any(q>self.model.jnt_range[:,1]+1.e-9):
+            raise ValueError('整手姿态超出 URDF 限位')
+        self.control_data.qpos[:] = q
+        mujoco.mj_kinematics(self.model,self.control_data)
+        mujoco.mj_comPos(self.model,self.control_data)
+        self.forearm_roll = float(wrist[0])
+        rotation = Rotation.from_rotvec([self.forearm_roll,0.,0.])
+        self.base_rotation = rotation.as_matrix()
+        self.base_quat_wxyz = rotation.as_quat()[[3,0,1,2]]
+        self.base_translation_m = self.roll_pivot-self.base_rotation@self.roll_pivot
 
     def validate(self, u):
         u = np.asarray(u, dtype=float)

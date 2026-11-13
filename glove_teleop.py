@@ -289,7 +289,7 @@ def follow_step(current, goal, dt, reference, fixed_indices, config):
     return u
 
 
-def follow_digits(current,goal,dt,reference,slices,config,previous_velocity=None):
+def follow_digits(current,goal,dt,reference,slices,config,previous_velocity=None,*,response=None,goal_velocity=None):
     """Critically damped tracking with the original speed ceiling per digit."""
     if not np.isfinite(dt) or dt<0:raise ValueError('跟随时间无效')
     if dt==0:return current.copy()
@@ -298,9 +298,22 @@ def follow_digits(current,goal,dt,reference,slices,config,previous_velocity=None
     # A 28 ms pole for the default personal profile softens reversals while
     # each digit retains its full steady movement range.
     omega=1.25/float(config['filter_time_constant_s'])
-    decay=np.exp(-omega*interval)
     error=goal-current
+    if response is not None:
+        # Shorten the response time only on digits that are falling behind.
+        # Keep the original damping for sub-degree movements and settling.
+        base_omega = omega
+        omega = np.full_like(error, base_omega)
+        transition = np.radians(response['transition_deg'])
+        for sl in slices.values():
+            ratio = np.max(np.abs(error[sl])) / transition
+            omega[sl] *= 1.+(response['max_rate_ratio']-1.)*ratio**2/(1.+ratio**2)
+    decay=np.exp(-omega*interval)
     step=error*(1.-(1.+omega*interval)*decay)+last*interval*decay
+    if goal_velocity is not None:
+        # Exact critically damped update in the frame of a linearly moving
+        # target, expressed relative to the newest target sample.
+        step+=goal_velocity*omega*interval**2*decay
     maxstep=np.radians(config['max_joint_speed_deg_s'])*interval
     for sl in slices.values():
         largest=np.max(np.abs(step[sl]))

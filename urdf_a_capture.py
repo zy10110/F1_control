@@ -203,8 +203,9 @@ class CaptureGuide:
             raise ValueError('标定档案与当前手套手别不一致')
         previous=self.app.follower
         try:
-            updated=Follower(self.app.g,candidate)
+            updated=Follower(self.app.g,candidate,overlap_limit_mm=previous.overlap_stop.limit_mm if previous.overlap_stop else None)
             updated.u=previous.u.copy()
+            updated.sweep.floors=previous.sweep.floors.copy()
             updated.goal=updated.u.copy()
             updated.g.assign(updated.u)
             pending=self.app.profile.with_suffix('.json.tmp')

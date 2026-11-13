@@ -1,4 +1,5 @@
 {
+  "sim_overlap_limit_mm": 1.5,
   "middle_unavailable": false,
   "kind": "urdf_a_natural_v2",
   "geometry_id": "1f570925be04f84e7b731696bb12f9526f7414c6c94527fcd03477eec13c8a74",
@@ -30721,5 +30722,26 @@
     "shape_tradeoff": "user_prioritizes_3mm",
     "baseline_sha256": "a0ac6a64f3e2a7ff2db7049bfa6a31887a7e170cbcf31521486ac02ed7109026"
   },
-  "contact_goal_mm": 3.0
+  "contact_goal_mm": 3.0,
+  "angle_derived_spacing": {
+    "range_mm": 22.0,
+    "pad_allowance_mm": 2.5,
+    "max_change_deg": 8.0,
+    "posture_mm_per_rad": 5.0,
+    "iterations": 4,
+    "aperture_range_mm": 38.0
+  },
+  "fine_motion_response": {
+    "transition_deg": 3.0,
+    "max_rate_ratio": 1.65
+  },
+  "segment_alignment": {
+    "max_change_deg": 12.0,
+    "posture_weight": 0.2,
+    "thumb_bend_plane": true
+  },
+  "joint_surface_touch": {
+    "radius_mm": 13.0,
+    "index_radius_mm": 27.725727777474322
+  }
 }

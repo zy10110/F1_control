@@ -1,6 +1,13 @@
 """Match finger segment directions in palm coordinates within native A limits."""
+import mujoco
 import numpy as np
+from scipy.optimize import lsq_linear
 from hand_kinematics import FINGERS
+
+
+def thumb_segments(values):
+    cmc, mcp1, mcp2, ip1, ip2, tip = values
+    return np.diff([cmc, (mcp1+mcp2)/2, (ip1+ip2)/2, tip], axis=0)
 
 
 class SegmentAlignment:
@@ -14,6 +21,59 @@ class SegmentAlignment:
         self.anchors=np.array([[[thumb_axis,thumb_axis],g.pair_axes['thumb','mcp'],g.pair_axes['thumb','ip']],
                                *[[g.pair_axes[f,s] for s in ('mcp','pip','dip')] for f in FINGERS[1:]]])
         self.columns=[g.cols[f] for f in FINGERS]
+        self.thumb_bend_plane = settings.get('thumb_bend_plane', False)
+
+    def align_thumb(self, nominal, chains, rotation, bend_axis, shaft_weight):
+        """Match the G7 thumb's three bone directions and signed flexion axis."""
+        gap = min(np.linalg.norm(chains[f][-1] - chains['thumb'][-1]) for f in FINGERS[1:])
+        # The existing aperture and surface calibration owns close approaches.
+        t = np.clip((gap - 30.) / 30., 0., 1.)
+        weight = t*t*(3.-2.*t) * (1.-shaft_weight)
+        if weight <= 0.:
+            return nominal
+        g = self.g
+        cols = g.cols['thumb']
+        coupling = g.C[:, cols]
+        target = np.diff(chains['thumb'], axis=0) @ rotation.T
+        target /= np.linalg.norm(target, axis=1, keepdims=True)
+        flex = g.pair_axes['thumb', 'mcp']
+        ip = g.pair_axes['thumb', 'ip']
+        root = g.root_joints['thumb']
+        q = nominal.copy()
+        for _ in range(4):
+            g.assign(q)
+            # The SDK's first segment starts at CMC. Use the two physical
+            # hinge centers for each coupled joint and the actual distal tip.
+            distal = g.distal['thumb']
+            tip = g.data.xpos[distal] + g.data.xmat[distal].reshape(3, 3) @ g.tip['thumb']
+            points = [g.data.xanchor[root], *g.data.xanchor[flex], *g.data.xanchor[ip], tip]
+            bodies = [g.model.jnt_bodyid[j] for j in (root, *flex, *ip)] + [distal]
+            pos_jac = []
+            for point, body in zip(points, bodies):
+                jac = np.empty((3, g.model.nv))
+                mujoco.mj_jac(g.model, g.data, jac, None, point, body)
+                pos_jac.append(jac @ coupling)
+            bones = thumb_segments(points)
+            lengths = np.linalg.norm(bones, axis=1)
+            dirs = bones / lengths[:, None]
+            proj = np.eye(3) - dirs[:, :, None] * dirs[:, None, :]
+            direction_jac = (proj @ thumb_segments(pos_jac)) / lengths[:, None, None]
+            axis = g.data.xaxis[flex[0]]
+            rot_jac = np.empty((3, g.model.nv))
+            mujoco.mj_jacBody(g.model, g.data, None, rot_jac, bodies[1])
+            axis_jac = np.cross((rot_jac @ coupling).T, axis).T
+            # A soft preference in the last degrees of travel lets alternate
+            # root axes share the bend. The native hard stops remain available.
+            reserve = np.radians(8.)
+            inside = np.clip(q[cols[:3]], g.lo[cols[:3]]+reserve, g.hi[cols[:3]]-reserve)
+            barrier = inside - q[cols[:3]]
+            A = np.vstack((direction_jac.reshape(9, 5), axis_jac, .20*np.eye(5),
+                           .8*(barrier != 0.)[:,None]*np.eye(3, 5)))
+            rhs = np.r_[(target-dirs).ravel(), bend_axis-axis, .20*(nominal[cols]-q[cols]), .8*barrier]
+            lo, hi = g.lo[cols]-q[cols], g.hi[cols]-q[cols]
+            step = lsq_linear(A, rhs, bounds=(lo, hi), method='bvls').x
+            q[cols] += np.clip(step, lo, hi)
+        return nominal + weight*(q-nominal)
 
     def directions(self,q):
         g=self.g;g.assign(q)
